@@ -2,10 +2,28 @@ import pandas
 
 from datetime import datetime
 
-special_days = {
-    'Labour Day': (9, 4),
+# replace with inputs from Tk window
+holidays = {
+    'Labour Day': [9, 4],
+    'Thanksgiving': [10, 9],
+    'Winter Break': [12, 2],
+    'Family Day': [2, 19],
+    'March Break': [3, 11],
+    'Good Friday': [3, 29],
+    'Easter Monday': [4, 1],
+    'Victoria Day': [5, 20],
 }
 
+pa_days = {
+    [10, 6],
+    [11, 17],
+    [2, 1],
+    [2, 16],
+    [4, 19],
+    [6, 27],
+    [6, 28],
+}
+    
 
 def check_day(year, month):
     day = 1
@@ -26,10 +44,13 @@ def check_day(year, month):
             output += ' | '
 
             # adds format based on day
-            for i in special_days:
-                if month == special_days[i][0]:
-                    if day == special_days[i][1]:
-                        output += 'Holiday - No School'
+            for i in holidays:
+                if month == holidays[i][0]:
+                    if day == holidays[i][1]:
+                        output += f'{holidays[i]} - No School'
+                elif month == pa_days[i][0]:
+                    if day == pa_days[i][1]:
+                        output += f'{pa_days[i]} - No School'
             
             print(output)
     
