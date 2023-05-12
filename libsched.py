@@ -61,7 +61,23 @@ class Gui:
         pa_days.append((date.month, date.day))
 
 
+class Formats:
+    month_format = workbook.add_format()
+    month_format.set_bold()
+    month_format.set_font_size(14)
+    month_format.set_font_color('red')
+    bold = workbook.add_format()
+    bold.set_bold()
+    bold.set_font_size(12)
+    dgray_bg = workbook.add_format()
+    dgray_bg.set_bg_color('#D3D3D3')
+    lgray_bg = workbook.add_format()
+    lgray_bg.set_bg_color('#F5F5F5')
+
+
 def check_day(workbook, year, month):
+    formats = Formats()
+
     day = 1
     row = 12
 
@@ -78,7 +94,7 @@ def check_day(workbook, year, month):
 
         if weekday != 'Saturday' and weekday != 'Sunday':
             # wrong format
-            worksheet.write(row, 0, f'{weekday} {month_name} {day}')
+            worksheet.write(row, 0, f'{weekday} {month_name} {day}', formats.bold)
 
             # if not on a late start day
             worksheet.write(row+1, 0, 'P1 - 9:00 - 10:20')
@@ -86,6 +102,11 @@ def check_day(workbook, year, month):
             worksheet.write(row+3, 0, 'LUNCH 11:40 - 12:40')
             worksheet.write(row+4, 0, 'P3 - 12:40 - 1:55')
             worksheet.write(row+5, 0, 'P4 - 2:00 - 3:15')
+
+            worksheet.set_row(row+1, None, formats.dgray_bg)
+            worksheet.set_row(row+2, None, formats.lgray_bg)
+            worksheet.set_row(row+3, None, formats.dgray_bg)
+            worksheet.set_row(row+4, None, formats.lgray_bg)
             
             row += 7
 
@@ -131,7 +152,10 @@ def sheet_constructor(workbook, year, month):
         worksheet.write(10, col, "Teacher's Name")
         worksheet.write(10, col+1, '# of Students')
 
-        worksheet.set_column(col, col+1, 16)
+        worksheet.set_column('A:A', 18)
+        worksheet.set_column(col, col, 15)
+        worksheet.set_column(col+1, col+1, 13)
+        worksheet.set_column(col-1, col-1, 1)
         
         if i == 'Room C13 Computer Lab':
             worksheet.write(8, col, '**Please Pick Up Key at Office ***')
@@ -149,8 +173,8 @@ def main():
 
     workbook = xlsxwriter.Workbook(f'VPCI Library Booking Sheets for {y}-{y+1}.xlsx')
 
-    gui = Gui()
-    gui.run(y, m, d)
+    #gui = Gui()
+    #gui.run(y, m, d)
 
     for month in range(9, 13):
         check_day(workbook, y, month)
