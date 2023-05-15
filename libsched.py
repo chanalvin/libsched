@@ -79,6 +79,12 @@ class Sheets:
         self.empty.set_border(7)
         self.empty.set_border_color('#C0C0C0')
         self.empty.set_bg_color('#FFFFFF')
+        self.c13_border = self.workbook.add_format()
+        self.c13_border.set_font_name('Arial')
+        self.c13_border.set_font_size(10)
+        self.c13_border.set_border(7)
+        self.c13_border.set_border_color('#C0C0C0')
+        self.c13_border.set_bg_color('#000000')
         self.large_header = self.workbook.add_format()
         self.large_header.set_font_name('Arial')
         self.large_header.set_bold()
@@ -184,7 +190,7 @@ class Sheets:
 
     def sheet_constructor(self):
         worksheet = self.workbook.add_worksheet(f'{calendar.month_name[self.month].upper()} {self.year}')
-        
+
         for i in range(200):
             worksheet.set_row(i, None, self.empty)
 
@@ -232,6 +238,8 @@ class Sheets:
                 worksheet.write(7, col, '**Please Pick Up Key at Office ***')
 
             col += 3
+
+        worksheet.split_panes(15*4, 0, 15*32, 0)
         
         return worksheet
 
@@ -383,6 +391,9 @@ class Sheets:
                 row += 7
 
             labour_day_seen = False
+
+        for i in range(7, row):
+            worksheet.write(i, 13, '', self.c13_border)
 
         self.month += 1
         if self.month == 13:
