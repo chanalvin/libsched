@@ -33,9 +33,6 @@ pa_days = [
 ]
 """
 
-holidays = {}
-pa_days = []
-
 
 class Gui:
     def __init__(self):
@@ -239,7 +236,10 @@ class Sheets:
 
             col += 3
 
-        worksheet.split_panes(15*4, 0, 15*32, 0)
+        for i in range(2, 8):
+            worksheet.set_row(i, None, None, {'hidden':1})
+        
+        worksheet.freeze_panes(10, 0)
         
         return worksheet
 
@@ -391,6 +391,8 @@ class Sheets:
                 row += 7
 
             labour_day_seen = False
+
+            worksheet.conditional_format(row, 1, row, 1, {'type': 'cell', 'criteria': '==', 'value': '"*"', 'format': self.holiday_header})
 
         for i in range(7, row):
             worksheet.write(i, 13, '', self.c13_border)
