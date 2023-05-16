@@ -7,6 +7,8 @@ from tkcalendar import Calendar
 
 from datetime import datetime
 
+from xlsxwriter.utility import xl_rowcol_to_cell # wtf
+
 # replace with inputs from Tk window
 """
 holidays = {
@@ -392,7 +394,12 @@ class Sheets:
 
             labour_day_seen = False
 
-            worksheet.conditional_format(row, 1, row, 1, {'type': 'cell', 'criteria': '==', 'value': '"*"', 'format': self.holiday_header})
+            cell_num = xl_rowcol_to_cell(row, 1)
+            worksheet.conditional_format(f'{cell_num}:{cell_num}', {'type': 'cell', 'criteria': '==', 'value': '"*"', 'format': self.holiday_header})
+
+            for i in range(50):
+                cell_temp = xl_rowcol_to_cell(row, i)
+                worksheet.conditional_format(f'{cell_temp}:{cell_temp}', {'type': 'formula', 'criteria': f'={cell_num}="*"', 'format': self.holiday_header})
 
         for i in range(7, row):
             worksheet.write(i, 13, '', self.c13_border)
