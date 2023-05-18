@@ -254,7 +254,6 @@ class Sheets:
         """
         mid1_day = 15
         mid1_day_weekday = pandas.Timestamp(f'{str(self.year).zfill(4)}-{str(6).zfill(2)}-{str(mid1_day).zfill(2)}').day_name()
-
         match mid1_day_weekday:
             case 'Sunday': mid1_day += 5
             case 'Monday': mid1_day += 4
@@ -282,7 +281,6 @@ class Sheets:
         """
         mid2_day = 16
         mid2_day_weekday = pandas.Timestamp(f'{str(self.year+1).zfill(4)}-{str(6).zfill(2)}-{str(mid2_day).zfill(2)}').day_name()
-
         match mid2_day_weekday:
             case 'Sunday': mid2_day += 5
             case 'Monday': mid2_day += 4
@@ -298,7 +296,6 @@ class Sheets:
         """
         last_day = 30
         last_day_weekday = pandas.Timestamp(f'{str(self.year+1).zfill(4)}-{str(6).zfill(2)}-{str(last_day).zfill(2)}').day_name()
-
         match last_day_weekday:
             case 'Sunday': last_day -= 2
             case 'Monday': last_day -= 3
@@ -307,7 +304,6 @@ class Sheets:
             case 'Thursday': last_day = last_day
             case 'Friday': last_day = last_day
             case 'Saturday': last_day -= 1
-
         if last_day_weekday == 'Thursday':
             self.pa_days.append((6, last_day))
         else:
@@ -386,27 +382,32 @@ class Sheets:
                 for i in self.holidays:
                     if self.month == self.holidays[i][0] and day == self.holidays[i][1]:
                         worksheet.write(row, 2, f'{i} - No School')
-                        worksheet.set_row(row, None, self.holiday_header)
+                        #worksheet.set_row(row, None, self.holiday_header)
                         worksheet.write(row, 0, f'{weekday} {month_name} {day}', self.holiday_day_header)
 
                 for i in self.pa_days:
                     if self.month == i[0] and day == i[1]:
                         worksheet.write(row, 2, f'PA Day - No School')
-                        worksheet.set_row(row, None, self.holiday_header)
+                        #worksheet.set_row(row, None, self.holiday_header)
                         worksheet.write(row, 0, f'{weekday} {month_name} {day}', self.holiday_day_header)
 
                 row += 7
 
             labour_day_seen = False
 
-            cell_num = xl_rowcol_to_cell(row, 1)
-            cell_end_num = xl_rowcol_to_cell(row+5, 1)
-            worksheet.write(row, 2, '', self.bold)
-            worksheet.conditional_format(f'{cell_num}:{cell_end_num}', {'type': 'cell', 'criteria': '==', 'value': '"*"', 'format': self.holiday_day_header})
+            curr_row = row - 7
+            cell_num = xl_rowcol_to_cell(curr_row, 1)
+            cell_end_num = xl_rowcol_to_cell(curr_row+5, 1)
+            worksheet.write(curr_row, 2, '', self.bold)
+            worksheet.conditional_format(f'{cell_num}:{cell_end_num}', {'type': 'cell', 'criteria': '==', 'value': '"*"', 'format': self.holiday_header})
 
-            cell_temp = xl_rowcol_to_cell(row, 0)
-            cell_end_temp = xl_rowcol_to_cell(row+5, 30)
-            worksheet.conditional_format(f'{cell_temp}:{cell_end_temp}', {'type': 'formula', 'criteria': f'={cell_num}="*"', 'format': self.holiday_day_header})
+            for j in range(6):
+                for i in range(30):
+                    cell_temp = xl_rowcol_to_cell(curr_row+j, 1)
+                    
+                    if i != 13:
+                        cell_end_temp = xl_rowcol_to_cell(curr_row+j, i)
+                        worksheet.conditional_format(f'{cell_end_temp}:{cell_end_temp}', {'type': 'formula', 'criteria': f'={cell_temp}="*"', 'format': self.holiday_header})
 
         for i in range(7, row):
             worksheet.write(i, 13, '', self.c13_border)
