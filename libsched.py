@@ -78,6 +78,11 @@ class Sheets:
         self.empty.set_border(7)
         self.empty.set_border_color('#C0C0C0')
         self.empty.set_bg_color('#FFFFFF')
+        self.bold = self.workbook.add_format()
+        self.bold.set_font_name('Arial')
+        self.bold.set_font_size(12)
+        self.bold.set_border(7)
+        self.bold.set_border_color('#C0C0C0')
         self.c13_border = self.workbook.add_format()
         self.c13_border.set_font_name('Arial')
         self.c13_border.set_font_size(10)
@@ -395,11 +400,13 @@ class Sheets:
             labour_day_seen = False
 
             cell_num = xl_rowcol_to_cell(row, 1)
-            worksheet.conditional_format(f'{cell_num}:{cell_num}', {'type': 'cell', 'criteria': '==', 'value': '"*"', 'format': self.holiday_header})
+            cell_end_num = xl_rowcol_to_cell(row+5, 1)
+            worksheet.write(row, 2, '', self.bold)
+            worksheet.conditional_format(f'{cell_num}:{cell_end_num}', {'type': 'cell', 'criteria': '==', 'value': '"*"', 'format': self.holiday_day_header})
 
-            for i in range(50):
-                cell_temp = xl_rowcol_to_cell(row, i)
-                worksheet.conditional_format(f'{cell_temp}:{cell_temp}', {'type': 'formula', 'criteria': f'={cell_num}="*"', 'format': self.holiday_header})
+            cell_temp = xl_rowcol_to_cell(row, 0)
+            cell_end_temp = xl_rowcol_to_cell(row+5, 30)
+            worksheet.conditional_format(f'{cell_temp}:{cell_end_temp}', {'type': 'formula', 'criteria': f'={cell_num}="*"', 'format': self.holiday_day_header})
 
         for i in range(7, row):
             worksheet.write(i, 13, '', self.c13_border)
