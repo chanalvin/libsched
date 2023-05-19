@@ -365,6 +365,7 @@ class Sheets:
 
                 # wrong format
                 worksheet.write(row, 0, f'{weekday} {month_name} {day}', self.day_header)
+                worksheet.write(row, 2, '', self.bold)
 
                 # if not on a late start day
                 worksheet.write(row+1, 0, 'P1 - 9:00 - 10:20')
@@ -382,13 +383,13 @@ class Sheets:
                 for i in self.holidays:
                     if self.month == self.holidays[i][0] and day == self.holidays[i][1]:
                         worksheet.write(row, 2, f'{i} - No School')
-                        #worksheet.set_row(row, None, self.holiday_header)
+                        worksheet.set_row(row, None, self.holiday_header)
                         worksheet.write(row, 0, f'{weekday} {month_name} {day}', self.holiday_day_header)
 
                 for i in self.pa_days:
                     if self.month == i[0] and day == i[1]:
                         worksheet.write(row, 2, f'PA Day - No School')
-                        #worksheet.set_row(row, None, self.holiday_header)
+                        worksheet.set_row(row, None, self.holiday_header)
                         worksheet.write(row, 0, f'{weekday} {month_name} {day}', self.holiday_day_header)
 
                 row += 7
@@ -398,7 +399,9 @@ class Sheets:
             curr_row = row - 7
             cell_num = xl_rowcol_to_cell(curr_row, 1)
             cell_end_num = xl_rowcol_to_cell(curr_row+5, 1)
-            worksheet.write(curr_row, 2, '', self.bold)
+            cell_space = xl_rowcol_to_cell(curr_row, 2)
+            #worksheet.conditional_format(f'{cell_space}:{cell_space}', {'type': 'formula', 'criteria': f'={cell_space}=""', 'format': self.bold})
+            #worksheet.write(curr_row, 2, '', self.bold)
             worksheet.conditional_format(f'{cell_num}:{cell_end_num}', {'type': 'cell', 'criteria': '==', 'value': '"*"', 'format': self.holiday_header})
 
             for j in range(6):
