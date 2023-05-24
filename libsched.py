@@ -70,7 +70,7 @@ class Sheets:
         self.holidays = {}
         self.pa_days = []
         
-        self.workbook = xlsxwriter.Workbook(f'VPCI Library Booking Sheets for {self.year}-{self.year+1}.xlsx')
+        self.workbook = xlsxwriter.Workbook(f'{self.year}-{self.year+1} VPCI Library Booking Sheets.xlsx')
 
         self.empty = self.workbook.add_format()
         self.empty.set_font_name('Arial')
