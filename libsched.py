@@ -9,56 +9,6 @@ from datetime import datetime
 
 from xlsxwriter.utility import xl_rowcol_to_cell # wtf
 
-# replace with inputs from Tk window
-"""
-holidays = {
-    'Labour Day': (9, 4),
-    'Thanksgiving': (10, 9),
-    'Winter Break': (12, 2),
-    'Family Day': (2, 19),
-    'March Break': (3, 11),
-    'Good Friday': (3, 29),
-    'Easter Monday': (4, 1),
-    'Victoria Day': (5, 20),
-}
-"""
-
-"""
-pa_days = [
-    (10, 6),
-    (11, 17),
-    (2, 1),
-    (2, 16),
-    (4, 19),
-    (6, 27),
-    (6, 28),
-]
-"""
-
-
-class Gui:
-    def __init__(self):
-        self.window = Tk()
-        self.window.geometry('400x400')
-
-    def run(self, y, m, d):
-        self.cal = Calendar(self.window, selectmode='day', year=y, month=m, day=d)
-        self.cal.pack(pady=20)
-
-        Button(self.window, text='Get Date', command=self.select_date).pack(pady=20)
-
-        self.date_label = Label(self.window, text='')
-        self.date_label.pack(pady=20)
-
-        self.window.mainloop()
-
-    def select_date(self):
-        date = self.cal.get_date()
-        self.date_label.config(text=f'Selected date is: {date}')
-
-        date = pandas.to_datetime(date)
-        pa_days.append((date.month, date.day))
-
 
 class Sheets:
 
@@ -250,68 +200,6 @@ class Sheets:
         
         return worksheet
 
-    def bedshitting(self):
-        """
-        mid1_day = 15
-        mid1_day_weekday = pandas.Timestamp(f'{str(self.year).zfill(4)}-{str(6).zfill(2)}-{str(mid1_day).zfill(2)}').day_name()
-        match mid1_day_weekday:
-            case 'Sunday': mid1_day += 5
-            case 'Monday': mid1_day += 4
-            case 'Tuesday': mid1_day += 3
-            case 'Wednesday': mid1_day += 2
-            case 'Thursday': mid1_day += 1
-            case 'Friday': mid1_day = mid1_day
-            case 'Saturday': mid1_day += 6
-        
-        self.pa_days.append((11, mid1_day))
-        """
-        
-        """
-        # 2nd semester start date check
-        match pandas.Timestamp(f'{str(self.year).zfill(4)}-{str(6).zfill(2)}-{str(31).zfill(2)}').day_name():
-            case 'Sunday': (2, 5)
-            case 'Monday': (2, 2)
-            case 'Tuesday': (2, 2)
-            case 'Wednesday': (2, 1)
-            case 'Thursday': (1, 31)
-            case 'Friday': (1, 30)
-            case 'Saturday': ()
-        """
-
-        """
-        mid2_day = 16
-        mid2_day_weekday = pandas.Timestamp(f'{str(self.year+1).zfill(4)}-{str(6).zfill(2)}-{str(mid2_day).zfill(2)}').day_name()
-        match mid2_day_weekday:
-            case 'Sunday': mid2_day += 5
-            case 'Monday': mid2_day += 4
-            case 'Tuesday': mid2_day += 3
-            case 'Wednesday': mid2_day += 2
-            case 'Thursday': mid2_day += 1
-            case 'Friday': mid2_day = mid2_day
-            case 'Saturday': mid2_day += 6
-        
-        self.pa_days.append((4, mid2_day))
-        """
-        
-        """
-        last_day = 30
-        last_day_weekday = pandas.Timestamp(f'{str(self.year+1).zfill(4)}-{str(6).zfill(2)}-{str(last_day).zfill(2)}').day_name()
-        match last_day_weekday:
-            case 'Sunday': last_day -= 2
-            case 'Monday': last_day -= 3
-            case 'Tuesday': last_day -= 4
-            case 'Wednesday': last_day -= 5
-            case 'Thursday': last_day = last_day
-            case 'Friday': last_day = last_day
-            case 'Saturday': last_day -= 1
-        if last_day_weekday == 'Thursday':
-            self.pa_days.append((6, last_day))
-        else:
-            self.pa_days.append((6, last_day-1))
-            self.pa_days.append((6, last_day))
-        """
-
-
     def check_day(self):
         row = 11
         is_first = True
@@ -400,8 +288,6 @@ class Sheets:
             cell_num = xl_rowcol_to_cell(curr_row, 1)
             cell_end_num = xl_rowcol_to_cell(curr_row+5, 1)
             cell_space = xl_rowcol_to_cell(curr_row, 2)
-            #worksheet.conditional_format(f'{cell_space}:{cell_space}', {'type': 'formula', 'criteria': f'={cell_space}=""', 'format': self.bold})
-            #worksheet.write(curr_row, 2, '', self.bold)
             worksheet.conditional_format(f'{cell_num}:{cell_end_num}', {'type': 'cell', 'criteria': '==', 'value': '"*"', 'format': self.holiday_header})
 
             for j in range(6):
@@ -427,12 +313,8 @@ class Sheets:
                 
 
 def main():
-    #gui = Gui()
-    #gui.run(y, m, d)
-
     sheets = Sheets()
 
-    #sheets.bedshitting()
     sheets.check_day()
 
     sheets.workbook.close()
