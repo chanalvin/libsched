@@ -96,6 +96,13 @@ class Sheets:
         self.general_area_header.set_border(7)
         self.general_area_header.set_border_color('#C0C0C0')
         self.general_area_header.set_bg_color('#C27BA0')
+        self.alcove_header = self.workbook.add_format()
+        self.alcove_header.set_font_name('Arial')
+        self.alcove_header.set_font_size(10)
+        self.alcove_header.set_bold()
+        self.alcove_header.set_border(7)
+        self.alcove_header.set_border_color('#C0C0C0')
+        self.alcove_header.set_bg_color('#CCCCCC')
         self.c13_lab_header = self.workbook.add_format()
         self.c13_lab_header.set_font_name('Arial')
         self.c13_lab_header.set_font_size(10)
@@ -172,10 +179,12 @@ class Sheets:
             ('ATWOOD LAB ( 23 Computers )', self.atwood_header),
             ('HADFIELD LAB ( 29 Computers )', self.hadfield_header),
             ('GENERAL AREA COMPUTERS ( 20 Computers )', self.general_area_header),
+            ('ALCOVE ( Projector + Event Space )', self.alcove_header),
             ('Room C13 Computer Lab', self.c13_lab_header),
         ]
 
         col = 2
+        self.c13_location = 0
         for i in area_headers:
             worksheet.write(8, col, i[0], i[1])
             worksheet.write(8, col+1, None, i[1])
@@ -190,6 +199,7 @@ class Sheets:
             
             if i[0] == 'Room C13 Computer Lab':
                 worksheet.write(7, col, '**Please Pick Up Key at Office ***')
+                self.c13_location = col-1
 
             col += 3
 
@@ -248,7 +258,7 @@ class Sheets:
 
                     is_first = False
                 
-                if labour_day_seen:
+                if labour_day_seen and row-7 >= 11:
                     row -= 7
 
                 # wrong format
@@ -299,7 +309,10 @@ class Sheets:
                         worksheet.conditional_format(f'{cell_end_temp}:{cell_end_temp}', {'type': 'formula', 'criteria': f'={cell_temp}="*"', 'format': self.holiday_header})
 
         for i in range(7, row):
-            worksheet.write(i, 13, '', self.c13_border)
+            if self.c13_location == 0:
+                raise Exception('C13 bar did not move from origin.')
+            else:
+                worksheet.write(i, self.c13_location, '', self.c13_border)
 
         self.month += 1
         if self.month == 13:
