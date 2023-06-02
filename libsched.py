@@ -102,7 +102,7 @@ class Sheets:
         self.alcove_header.set_bold()
         self.alcove_header.set_border(7)
         self.alcove_header.set_border_color('#C0C0C0')
-        self.alcove_header.set_bg_color('#CCCCCC')
+        self.alcove_header.set_bg_color('#45818E')
         self.c13_lab_header = self.workbook.add_format()
         self.c13_lab_header.set_font_name('Arial')
         self.c13_lab_header.set_font_size(10)
