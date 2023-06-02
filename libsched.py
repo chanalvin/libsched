@@ -304,7 +304,7 @@ class Sheets:
                 for i in range(30):
                     cell_temp = xl_rowcol_to_cell(curr_row+j, 1)
                     
-                    if i != 13:
+                    if i != 16:
                         cell_end_temp = xl_rowcol_to_cell(curr_row+j, i)
                         worksheet.conditional_format(f'{cell_end_temp}:{cell_end_temp}', {'type': 'formula', 'criteria': f'={cell_temp}="*"', 'format': self.holiday_header})
 
